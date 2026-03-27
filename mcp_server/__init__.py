@@ -1,0 +1,1 @@
+"""CloudScope MCP server package."""

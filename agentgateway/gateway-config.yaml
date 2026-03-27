@@ -1,0 +1,63 @@
+apiVersion: gateway.cloudscope.dev/v1alpha1
+kind: AgentGatewayConfig
+metadata:
+  name: cloudscope-gateway
+  namespace: cloudscope
+spec:
+  listener:
+    address: 0.0.0.0
+    port: 8080
+  upstream:
+    name: cloudscope-mcp
+    url: http://cloudscope-mcp-service.cloudscope.svc.cluster.local:8000/mcp
+    timeoutSeconds: 30
+  rateLimit:
+    enabled: true
+    strategy: ip
+    requestsPerMinute: 60
+  auditLogging:
+    enabled: true
+    format: json
+    includeRequestHeaders:
+      - x-request-id
+      - x-api-key
+    includeResponseMetadata: true
+  accessPolicies:
+    - name: public-read-tools
+      description: Allow read-only educational tools without credentials.
+      match:
+        tools:
+          - search_docs
+          - explain_concept
+          - compare_cloud_tools
+      action: allow
+    - name: protected-generation-tools
+      description: Require an API key for mutating or deeper diagnostic flows.
+      match:
+        tools:
+          - generate_kubernetes_yaml
+          - debug_kubernetes_error
+      action: requireHeader
+      header:
+        name: X-API-Key
+        valueFrom: static
+  cors:
+    enabled: true
+    allowOrigins:
+      - "*"
+    allowMethods:
+      - GET
+      - POST
+      - OPTIONS
+    allowHeaders:
+      - Content-Type
+      - Authorization
+      - X-API-Key
+      - X-Request-Id
+  health:
+    enabled: true
+    path: /health
+  metrics:
+    enabled: true
+    path: /metrics
+    format: prometheus

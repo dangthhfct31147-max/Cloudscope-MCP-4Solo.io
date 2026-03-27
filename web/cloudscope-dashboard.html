@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CloudScope Dashboard</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github-dark.min.css">
+  <style>
+    :root { --bg:#0d1117; --surface:#161b22; --surface-2:#21262d; --border:#30363d; --text:#e6edf3; --text-muted:#8b949e; --accent:#00b4d8; --accent-hover:#0096c7; --success:#3fb950; --font:"Inter",-apple-system,sans-serif; }
+    html[data-theme="light"] { --bg:#eef7fb; --surface:#ffffffd9; --surface-2:#fff; --border:#d2e4ec; --text:#0f2b3d; --text-muted:#59717e; --accent:#0077b6; --accent-hover:#005f92; --success:#197b39; }
+    * { box-sizing:border-box; } html { scroll-behavior:smooth; } body { margin:0; font-family:var(--font); color:var(--text); background:radial-gradient(circle at 10% 20%, rgba(0,180,216,.16), transparent 32%), radial-gradient(circle at 90% 0%, rgba(63,185,80,.12), transparent 26%), linear-gradient(180deg, var(--bg), color-mix(in srgb, var(--bg) 88%, #021018 12%)); }
+    a { color:inherit; text-decoration:none; } button, input, textarea, select { font:inherit; } code { font-family:ui-monospace, Consolas, monospace; }
+    .wrap { width:min(1180px, calc(100vw - 28px)); margin:0 auto; padding:24px 0 72px; } .panel { background:color-mix(in srgb, var(--surface) 94%, transparent); border:1px solid var(--border); border-radius:24px; box-shadow:0 24px 80px rgba(0,0,0,.22); backdrop-filter:blur(18px); }
+    .top,.hero,.demo-panel.active,.starter-panel.active,.integrations,.arch,.cards { display:grid; gap:18px; } .top { grid-template-columns:1fr auto; align-items:center; padding:20px 24px; position:sticky; top:16px; z-index:10; } .hero { grid-template-columns:1.1fr .9fr; margin-top:22px; } .arch { grid-template-columns:repeat(3,1fr); } .cards { grid-template-columns:repeat(5,1fr); } .integrations { grid-template-columns:repeat(3,1fr); } .demo-panel.active,.starter-panel.active { grid-template-columns:340px 1fr; }
+    .brand,.actions,.hero-actions,.mini,.tabs,.footer-links,.row { display:flex; gap:12px; align-items:center; flex-wrap:wrap; } .brand { gap:14px; } .logo { width:46px; height:46px; border-radius:16px; display:grid; place-items:center; background:linear-gradient(135deg,var(--accent),#58d4e9 58%,#a5f3c6); color:#03131b; font-weight:800; }
+    .ghost,.primary,.tab { border:1px solid var(--border); border-radius:999px; padding:11px 15px; background:#ffffff08; color:var(--text); cursor:pointer; transition:.2s ease; } .primary { background:var(--accent); color:#02131a; border-color:transparent; font-weight:700; } .tab.active { background:var(--accent); color:#02131a; border-color:transparent; font-weight:700; } .ghost:hover,.primary:hover,.tab:hover { transform:translateY(-2px); }
+    .copy h1,.footer h1,.brand h1,.section h3,.card h4,.col h4 { margin:0; } .copy p,.meta,.section p,.card p,.col p,.footer p { margin:6px 0 0; color:var(--text-muted); line-height:1.7; }
+    .hero-copy,.hero-visual,.section,.footer { padding:30px; } .eyebrow { display:inline-flex; padding:8px 14px; border-radius:999px; background:#00b4d81a; color:var(--accent); font-size:.84rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; } .hero h2 { margin:18px 0 14px; font-size:clamp(2.8rem, 6vw, 4.6rem); line-height:.96; letter-spacing:-.05em; } .hero h2 span { display:block; min-height:1.08em; color:var(--accent); } .hero p { max-width:56ch; }
+    .mini article,.card,.col,.form,.output { background:color-mix(in srgb, var(--surface-2) 88%, transparent); border:1px solid var(--border); border-radius:20px; padding:18px; } .mini article { flex:1 1 150px; } .mini strong { display:block; font-size:1.4rem; }
+    .flow { position:relative; min-height:100%; display:grid; align-content:center; gap:16px; overflow:hidden; } .flow-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; z-index:1; } .flow-node,.pipe { padding:18px 12px; border-radius:18px; text-align:center; border:1px solid var(--border); background:color-mix(in srgb, var(--surface-2) 86%, transparent); font-weight:700; } .line { position:absolute; left:10%; right:10%; top:38%; height:2px; background:linear-gradient(90deg, rgba(0,180,216,.15), var(--accent), rgba(63,185,80,.15)); } .dot { position:absolute; top:calc(38% - 6px); left:10%; width:12px; height:12px; border-radius:50%; background:linear-gradient(135deg,#9ff8ff,var(--accent)); box-shadow:0 0 24px rgba(0,180,216,.6); animation:glide 3.4s linear infinite; } @keyframes glide { from { transform:translateX(0); } to { transform:translateX(calc(80vw - 420px)); } }
+    .section { margin-top:22px; opacity:0; transform:translateY(24px); transition:.45s ease; } .section.visible { opacity:1; transform:translateY(0); } .section-head { display:flex; justify-content:space-between; align-items:end; gap:16px; margin-bottom:18px; }
+    pre { margin:0; border-radius:18px; background:#02121acc; border:1px solid #00b4d82e; overflow:auto; } html[data-theme="light"] pre { background:#f7fbfd; border-color:#d1e8f0; } pre code { display:block; padding:16px; white-space:pre-wrap; line-height:1.65; font-size:.88rem; }
+    .arrow { flex:1; height:2px; background:linear-gradient(90deg, rgba(0,180,216,.15), var(--accent)); position:relative; overflow:hidden; } .arrow::after { content:""; position:absolute; top:-4px; left:-5%; width:10px; height:10px; border-radius:50%; background:#9ff8ff; animation:travel 2.8s linear infinite; } @keyframes travel { from { transform:translateX(0); } to { transform:translateX(105%); } }
+    .demo-panel,.starter-panel { display:none; } label { display:block; margin-bottom:8px; font-weight:600; } .field { margin-bottom:14px; } input,textarea,select { width:100%; padding:12px 14px; border-radius:14px; border:1px solid var(--border); background:#ffffff08; color:var(--text); } textarea { min-height:124px; resize:vertical; } .spinner { width:16px; height:16px; border:2px solid #ffffff24; border-top-color:var(--success); border-radius:50%; display:none; animation:spin .8s linear infinite; } .spinner.visible { display:inline-block; } @keyframes spin { to { transform:rotate(360deg); } }
+    .footer { display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; margin-top:22px; }
+    @media (max-width:980px) { .top,.hero,.arch,.cards,.integrations,.demo-panel.active,.starter-panel.active { grid-template-columns:1fr; } .flow-grid { grid-template-columns:repeat(2,1fr); } .line,.dot { display:none; } }
+    @media (max-width:640px) { .top,.hero-copy,.hero-visual,.section,.footer { padding:20px; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="panel top">
+      <div class="brand"><div class="logo">CS</div><div class="copy"><h1>CloudScope</h1><p>Cloud-native learning tools for MCP-enabled AI agents.</p></div></div>
+      <div class="actions"><button class="ghost" id="theme-toggle" type="button">Light Mode</button><a class="primary" href="https://github.com/" target="_blank" rel="noreferrer">GitHub</a></div>
+    </header>
+
+    <section class="hero">
+      <div class="panel hero-copy">
+        <div class="eyebrow">AI Hackathon for MCP and AI Agents</div>
+        <h2>Teach every agent to reason about <span id="hero-tech">Kubernetes</span></h2>
+        <p>CloudScope packages official docs search, concept teaching, YAML generation, error debugging, and tool comparison into one MCP server that feels useful in real developer workflows.</p>
+        <div class="hero-actions"><a class="primary" href="#live-demo">Try Live Demo</a><a class="ghost" href="#getting-started">See Setup</a></div>
+        <div class="mini"><article><strong>5</strong><span class="meta">MCP tools</span></article><article><strong>60+</strong><span class="meta">Concepts</span></article><article><strong>40+</strong><span class="meta">Error patterns</span></article></div>
+      </div>
+      <div class="panel hero-visual">
+        <div class="flow"><div class="line"></div><div class="dot"></div><div class="flow-grid"><div class="flow-node">User</div><div class="flow-node">Agent</div><div class="flow-node">MCP</div><div class="flow-node">Tools</div></div><pre><code>{
+  "agent": "CloudScope",
+  "transport": "http",
+  "endpoint": "/mcp",
+  "skills": ["docs", "explain", "yaml", "debug", "compare"]
+}</code></pre></div>
+      </div>
+    </section>
+
+    <section id="architecture" class="panel section">
+      <div class="section-head"><div><h3>Architecture</h3><p>MCP server in the middle, agent governance at the edge, and kagent as the execution home for cloud-native agent workflows.</p></div><pre><code>{
+  "mcpServers": {
+    "cloudscope": { "command": "python", "args": ["mcp_server/server.py"] }
+  }
+}</code></pre></div>
+      <div class="arch"><article class="card"><h4>MCP Server</h4><p>FastMCP publishes five tools with structured responses, fallback logic, and health or metrics routes for HTTP transport.</p></article><article class="card"><h4>agentgateway</h4><p>Public read-only tools stay open while YAML generation and debugging can be API-key protected with audit and rate limits.</p></article><article class="card"><h4>kagent</h4><p>The agent spec turns CloudScope into a reusable cloud-native assistant that can run inside a Kubernetes environment.</p></article></div>
+      <div class="row" style="margin-top:18px;"><span>MCP Server</span><div class="arrow"></div><span>agentgateway</span><div class="arrow"></div><span>kagent</span></div>
+    </section>
+
+    <section id="live-demo" class="panel section">
+      <div class="section-head"><div><h3>Live Demo</h3><p>Each tab simulates one tool call with realistic output, 800 ms async delay, copy support, and syntax highlighting for YAML.</p></div></div>
+      <div class="tabs" id="demo-tabs"><button class="tab active" data-tab="docs">Search Docs</button><button class="tab" data-tab="concept">Explain Concept</button><button class="tab" data-tab="yaml">Generate YAML</button><button class="tab" data-tab="debug">Debug Error</button><button class="tab" data-tab="compare">Compare Tools</button></div>
+      <article class="demo-panel active" data-panel="docs"><div class="form"><div class="field"><label for="docs-query">Query</label><input id="docs-query" value="rolling update best practices"></div><div class="field"><label for="docs-tech">Technology</label><select id="docs-tech"><option>kubernetes</option><option>docker</option><option>helm</option><option>prometheus</option><option>grafana</option></select></div><div class="row"><button class="primary run" data-tool="docs" type="button">Run Tool</button><span class="spinner"></span></div></div><div class="output"><div class="section-head" style="margin-bottom:10px;"><div><strong>Tool Output</strong><p class="meta">Mock response after 800 ms delay</p></div><button class="ghost copy-output" type="button">Copy</button></div><pre><code class="language-json output-code"></code></pre></div></article>
+      <article class="demo-panel" data-panel="concept"><div class="form"><div class="field"><label for="concept-name">Concept</label><input id="concept-name" value="StatefulSet"></div><div class="row"><button class="primary run" data-tool="concept" type="button">Run Tool</button><span class="spinner"></span></div></div><div class="output"><div class="section-head" style="margin-bottom:10px;"><div><strong>Tool Output</strong><p class="meta">Plain-English explanation with analogy</p></div><button class="ghost copy-output" type="button">Copy</button></div><pre><code class="language-json output-code"></code></pre></div></article>
+      <article class="demo-panel" data-panel="yaml"><div class="form"><div class="field"><label for="yaml-type">Resource Type</label><select id="yaml-type"><option>bundle</option><option>deployment</option><option>service</option><option>ingress</option><option>configmap</option><option>secret</option><option>hpa</option><option>pvc</option></select></div><div class="field"><label for="yaml-name">Name</label><input id="yaml-name" value="checkout-api"></div><div class="row"><button class="primary run" data-tool="yaml" type="button">Run Tool</button><span class="spinner"></span></div></div><div class="output"><div class="section-head" style="margin-bottom:10px;"><div><strong>Tool Output</strong><p class="meta">highlight.js via CDN</p></div><button class="ghost copy-output" type="button">Copy</button></div><pre><code class="language-yaml output-code"></code></pre></div></article>
+      <article class="demo-panel" data-panel="debug"><div class="form"><div class="field"><label for="debug-error">Error Message</label><textarea id="debug-error">ImagePullBackOff: Back-off pulling image "ghcr.io/acme/checkout:latest"</textarea></div><div class="row"><button class="primary run" data-tool="debug" type="button">Run Tool</button><span class="spinner"></span></div></div><div class="output"><div class="section-head" style="margin-bottom:10px;"><div><strong>Tool Output</strong><p class="meta">Cause, steps, commands, prevention</p></div><button class="ghost copy-output" type="button">Copy</button></div><pre><code class="language-json output-code"></code></pre></div></article>
+      <article class="demo-panel" data-panel="compare"><div class="form"><div class="field"><label for="tool-a">Tool A</label><input id="tool-a" value="helm"></div><div class="field"><label for="tool-b">Tool B</label><input id="tool-b" value="kustomize"></div><div class="row"><button class="primary run" data-tool="compare" type="button">Run Tool</button><span class="spinner"></span></div></div><div class="output"><div class="section-head" style="margin-bottom:10px;"><div><strong>Tool Output</strong><p class="meta">Five practical comparison dimensions</p></div><button class="ghost copy-output" type="button">Copy</button></div><pre><code class="language-json output-code"></code></pre></div></article>
+    </section>
+
+    <section class="panel section"><div class="section-head"><div><h3>Tool Cards</h3><p>The surface area stays practical: search, teach, generate, debug, and compare.</p></div></div><div class="cards"><article class="card"><h4>Docs Search</h4><p>Official docs search with local fallback knowledge.</p></article><article class="card"><h4>Concept Explainer</h4><p>60+ cloud-native concepts in plain language.</p></article><article class="card"><h4>YAML Generator</h4><p>Comment-rich, production-ready Kubernetes manifests.</p></article><article class="card"><h4>Error Debugger</h4><p>Regex-backed Kubernetes diagnosis with concrete fixes.</p></article><article class="card"><h4>Comparator</h4><p>Tradeoff-based tool decisions, not vague opinions.</p></article></div></section>
+
+    <section class="panel section"><div class="section-head"><div><h3>Integration</h3><p>CloudScope plugs into the surrounding agent stack from runtime to policy to registry packaging.</p></div></div><div class="integrations"><article class="col"><h4>kagent</h4><pre><code>tools:
+  - name: cloudscope-mcp-server
+    type: McpServer
+    mcpServer:
+      url: http://cloudscope-mcp-service:8000/mcp
+      transport: http</code></pre></article><article class="col"><h4>agentgateway</h4><pre><code>rateLimit:
+  requestsPerMinute: 60
+accessPolicies:
+  - tools: [search_docs, explain_concept, compare_cloud_tools]
+    action: allow</code></pre></article><article class="col"><h4>agentregistry</h4><pre><code>name: cloudscope
+category: cloud-native-learning
+entrypoint: README.md
+install:
+  - kubectl apply -f kagent/agent.yaml</code></pre></article></div></section>
+
+    <section id="getting-started" class="panel section">
+      <div class="section-head"><div><h3>Getting Started</h3><p>One product, three entry points: local Python, Claude Desktop, or a full kagent deployment.</p></div></div>
+      <div class="tabs starter-tabs"><button class="tab active" data-starter="python">Python</button><button class="tab" data-starter="claude">Claude Desktop JSON</button><button class="tab" data-starter="kagent">kagent YAML</button></div>
+      <article class="starter-panel active" data-starter-panel="python"><div class="card"><pre><code>cd cloudscope
+python -m venv .venv
+pip install -r mcp_server/requirements.txt
+python mcp_server/server.py</code></pre></div><div class="card"><p>Use stdio for local MCP clients or add <code>--transport http</code> to route through the gateway.</p></div></article>
+      <article class="starter-panel" data-starter-panel="claude"><div class="card"><pre><code>{
+  "mcpServers": {
+    "cloudscope": { "command": "python", "args": ["mcp_server/server.py"] }
+  }
+}</code></pre></div><div class="card"><p>Claude Desktop is the fastest path for local evaluation because it avoids extra HTTP plumbing.</p></div></article>
+      <article class="starter-panel" data-starter-panel="kagent"><div class="card"><pre><code>kubectl apply -f kagent/agent.yaml
+kubectl apply -f agentgateway/gateway-config.yaml
+kubectl get agent -n cloudscope</code></pre></div><div class="card"><p>This path shows the complete story: deploy the MCP server, protect it with policy, and register the agent workflow.</p></div></article>
+    </section>
+
+    <footer class="panel footer"><div class="brand"><div class="logo">CS</div><div class="copy"><h1>CloudScope</h1><p>Built for the Solo.io AI Hackathon for MCP and AI Agents.</p></div></div><div class="footer-links"><a href="#architecture">Architecture</a><a href="#live-demo">Live Demo</a><a href="#getting-started">Getting Started</a><a href="https://github.com/" target="_blank" rel="noreferrer">Repository</a></div></footer>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script>
+    const heroWords=["Kubernetes","Docker","Helm","Istio","Prometheus"];
+    const hero=document.getElementById("hero-tech");
+    const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+    let heroIndex=0;
+
+    async function typeHero(){
+      const word=heroWords[heroIndex%heroWords.length];
+      hero.textContent="";
+      for(const ch of word){ hero.textContent+=ch; await wait(55); }
+      await wait(1100);
+      heroIndex+=1;
+      typeHero();
+    }
+
+    function observeSections(){
+      const observer=new IntersectionObserver(entries=>{
+        entries.forEach(entry=>{ if(entry.isIntersecting){ entry.target.classList.add("visible"); } });
+      },{threshold:.16});
+      document.querySelectorAll(".section").forEach(section=>observer.observe(section));
+    }
+
+    function setupTabs(buttonSelector,panelSelector,dataKey,panelKey){
+      const buttons=document.querySelectorAll(buttonSelector);
+      const panels=document.querySelectorAll(panelSelector);
+      buttons.forEach(button=>{
+        button.addEventListener("click",()=>{
+          const target=button.dataset[dataKey];
+          buttons.forEach(node=>node.classList.remove("active"));
+          panels.forEach(panel=>panel.classList.remove("active"));
+          button.classList.add("active");
+          document.querySelector(`[data-${panelKey}="${target}"]`)?.classList.add("active");
+        });
+      });
+    }
+
+    function prettyJson(value){ return JSON.stringify(value,null,2); }
+
+    const mockTools={
+      docs:()=>prettyJson({
+        success:true,
+        results:[
+          { title:"Performing a Rolling Update", summary:"Step-by-step guidance for safe Deployment updates and rollout checks.", source_url:"https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/" },
+          { title:"Deployments", summary:"Core concepts for rollout strategy, rollback, and ReplicaSet management.", source_url:"https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" }
+        ],
+        cached:false,
+        fallback_used:false
+      }),
+      concept:()=>prettyJson({
+        success:true,
+        concept:document.getElementById("concept-name").value,
+        simple_explanation:"A StatefulSet manages Pods that need stable identity and stable storage.",
+        analogy:"Think of it as assigning each database replica a fixed desk and drawer.",
+        key_facts:["Pods get predictable names like db-0 and db-1.","It is commonly used with PersistentVolumeClaims.","Rollout order is deterministic."],
+        example_command:"kubectl get statefulset -n default",
+        related_concepts:["Persistent Volume Claim","Service","Pod"]
+      }),
+      yaml:()=>{
+        const name=document.getElementById("yaml-name").value;
+        const type=document.getElementById("yaml-type").value;
+        return `# ${type} manifest generated by CloudScope
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ${name}-config
+data:
+  APP_MODE: "production"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${name}
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ${name}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ${name}
+    spec:
+      terminationGracePeriodSeconds: 30
+      containers:
+        - name: ${name}
+          image: ghcr.io/cloudscope/demo-app:1.0.0
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8080
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080`;
+      },
+      debug:()=>prettyJson({
+        matched:true,
+        error_type:"ImagePullBackOff",
+        cause:"Kubernetes cannot pull the requested image from the registry.",
+        solution_steps:["Check image name and tag.","Verify imagePullSecret credentials.","Test the same image pull locally."],
+        kubectl_commands:["kubectl describe pod <pod-name> -n <namespace>","kubectl get events --sort-by=.metadata.creationTimestamp -n <namespace>"],
+        prevention:"Pin exact image tags and validate registry access before deployment."
+      }),
+      compare:()=>prettyJson({
+        summary:"Helm packages apps as charts while Kustomize overlays plain YAML.",
+        dimensions:{
+          ease_of_use:{ winner:"kustomize", reasoning:"Fewer abstractions to learn." },
+          performance:{ winner:"helm", reasoning:"Templating reduces duplication at scale." },
+          community:{ winner:"helm", reasoning:"The chart ecosystem is much larger." },
+          cloud_native_fit:{ winner:"kustomize", reasoning:"Fits raw GitOps overlays cleanly." },
+          learning_curve:{ winner:"kustomize", reasoning:"Patch-based workflows are simpler to start with." }
+        },
+        verdict:"Use Helm for reusable distribution and Kustomize for transparent environment overlays."
+      })
+    };
+
+    async function typewriter(target,text,language){
+      target.textContent="";
+      for(const ch of text){ target.textContent+=ch; await wait(4); }
+      target.className=`language-${language} output-code hljs`;
+      hljs.highlightElement(target);
+    }
+
+    document.querySelectorAll(".run").forEach(button=>{
+      button.addEventListener("click",async()=>{
+        const panel=button.closest(".demo-panel");
+        const spinner=panel.querySelector(".spinner");
+        const output=panel.querySelector(".output-code");
+        const tool=button.dataset.tool;
+        spinner.classList.add("visible");
+        await wait(800);
+        await typewriter(output,mockTools[tool](),tool==="yaml"?"yaml":"json");
+        spinner.classList.remove("visible");
+      });
+    });
+
+    document.querySelectorAll(".copy-output").forEach(button=>{
+      button.addEventListener("click",async()=>{
+        const text=button.closest(".output").querySelector(".output-code").textContent;
+        await navigator.clipboard.writeText(text);
+        button.textContent="Copied";
+        setTimeout(()=>{ button.textContent="Copy"; },1200);
+      });
+    });
+
+    document.getElementById("theme-toggle").addEventListener("click",()=>{
+      const html=document.documentElement;
+      const dark=html.dataset.theme==="dark";
+      html.dataset.theme=dark?"light":"dark";
+      document.getElementById("theme-toggle").textContent=dark?"Dark Mode":"Light Mode";
+    });
+
+    setupTabs("#demo-tabs .tab",".demo-panel","tab","panel");
+    setupTabs(".starter-tabs .tab",".starter-panel","starter","starter-panel");
+    observeSections();
+    typeHero();
+    document.querySelector(".run[data-tool='docs']").click();
+  </script>
+</body>
+</html>
