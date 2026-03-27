@@ -1,8 +1,6 @@
-#  ____ _                 _ ____                      
-# / ___| | ___  _   _  __| / ___|  ___ ___  _ __ ___ 
-#| |   | |/ _ \| | | |/ _` \___ \ / __/ _ \| '__/ _ \
-#| |___| | (_) | |_| | (_| |___) | (_| (_) | | |  __/
-# \____|_|\___/ \__,_|\__,_|____/ \___\___/|_|  \___|
+# Cloudscope-MCP-4Solo.io
+
+CloudScope is an MCP server for cloud-native learning, built for the Solo.io AI Hackathon for MCP and AI Agents.
 
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
 [![MCP](https://img.shields.io/badge/MCP-FastMCP-00B4D8?style=flat-square)](https://github.com/PrefectHQ/fastmcp)
