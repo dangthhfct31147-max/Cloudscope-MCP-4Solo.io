@@ -1,4 +1,4 @@
-# Cloudscope-MCP-4Solo.io
+# Cloudscope
 
 CloudScope is an MCP server for cloud-native learning, built for the Solo.io AI Hackathon for MCP and AI Agents.
 
